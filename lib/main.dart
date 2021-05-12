@@ -45,7 +45,7 @@ class _FindState extends State<Find> {
         ),
       ),
       body: Opacity(
-        opacity: 0.5,
+        opacity: 0.73,
         child: Container(
           constraints: BoxConstraints.expand(),
           decoration: BoxDecoration(
@@ -55,20 +55,34 @@ class _FindState extends State<Find> {
             )
           ),
           child: Column(
+            crossAxisAlignment: CrossAxisAlignment.center,
             children:[ Container(
-              child: Text(this.lat.toString(),style: TextStyle(
-                  fontSize: 37.0,
-                  color: Colors.lightGreenAccent,
+              child: Text("Note:Press the Below Button if you are Covid Positive",style: TextStyle(
+                  fontSize: 32.0,
+                  color: Colors.deepPurple,
                   fontStyle: FontStyle.italic,
-                  fontWeight: FontWeight.w900
+                  fontFamily: 'Texturina',
+                  fontWeight: FontWeight.bold
               )),
-            ),Container(
-          child: Text(this.lon.toString(),style: TextStyle(
-              fontSize: 37.0,
-              color: Colors.lightGreenAccent,
-              fontStyle: FontStyle.italic,
-              fontWeight: FontWeight.w900)))],
+            ),
+              SizedBox(
+                height: 55.0,
+              ),
+              FlatButton(child: Text("COVID-19 +ve",style: TextStyle(
+                fontSize: 20.0,
+                fontWeight: FontWeight.w900,
+                fontFamily: 'Lobster',
+                color: Colors.indigo,
+                fontStyle: FontStyle.italic,
+              ),),height:40.0,
+                minWidth: 280.0,
+                color: Colors.pink,
+                shape:RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(11.0)),
+                onPressed: () { print("A"); },)
+            ],
           ),
+
         ),
       ),
     );
