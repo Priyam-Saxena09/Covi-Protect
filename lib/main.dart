@@ -38,10 +38,31 @@ class _FindState extends State<Find> {
       appBar: AppBar(
         title: Center(
           child: Text("Welcome to Covi-Protect",style: TextStyle(
-            fontSize: 30.0,
+            fontSize: 22.0,
             fontStyle: FontStyle.italic,
             fontWeight: FontWeight.w400
           ),),
+        ),
+      ),
+      drawer: Drawer(
+        child: Column(
+          children: [
+            Container(
+              color: Colors.indigo,
+              width: double.infinity,
+              height: 125.0,
+              child: CircleAvatar(
+                backgroundImage: AssetImage("images/istock.jpg"),
+              ),
+              ),
+        SizedBox(
+          height: 25.0,
+        ),
+        Text("Priyam Saxena",style: TextStyle(
+          fontSize: 28.0,
+          color: Colors.amber,
+        ),)
+          ],
         ),
       ),
       body: Opacity(
