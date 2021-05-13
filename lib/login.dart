@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
+import 'package:rflutter_alert/rflutter_alert.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({Key key}) : super(key: key);
@@ -9,24 +9,31 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> {
+  String email;
+  String password;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Text("Log In",style: TextStyle(
-            fontStyle: FontStyle.italic,
-            fontFamily: "Texturina",
-            fontSize: 65.0,
-            color: Colors.purple
-          ),),
+          Text(
+            "Log In",
+            style: TextStyle(
+                fontStyle: FontStyle.italic,
+                fontFamily: "Texturina",
+                fontSize: 65.0,
+                color: Colors.purple),
+          ),
           SizedBox(
             height: 20.0,
           ),
           TextField(
             keyboardType: TextInputType.emailAddress,
             textAlign: TextAlign.center,
+            onChanged: (val) {
+              email = val;
+            },
             decoration: InputDecoration(
               filled: true,
               fillColor: Colors.cyan,
@@ -34,11 +41,10 @@ class _LoginPageState extends State<LoginPage> {
               hintStyle: TextStyle(color: Colors.white),
               contentPadding: EdgeInsets.all(16.0),
               border: OutlineInputBorder(
-                borderRadius: BorderRadius.all(Radius.circular(40.0))
-              ),
+                  borderRadius: BorderRadius.all(Radius.circular(40.0))),
               enabledBorder: OutlineInputBorder(
                 borderSide:
-                BorderSide(color: Colors.lightBlueAccent, width: 1.0),
+                    BorderSide(color: Colors.lightBlueAccent, width: 1.0),
                 borderRadius: BorderRadius.all(Radius.circular(40.0)),
               ),
             ),
@@ -48,23 +54,41 @@ class _LoginPageState extends State<LoginPage> {
           ),
           TextField(
             obscureText: true,
-      textAlign: TextAlign.center,
-      decoration: InputDecoration(
-          filled: true,
-          fillColor: Colors.cyan,
-          hintText: "Enter Password",
-          hintStyle: TextStyle(color: Colors.white),
-          contentPadding: EdgeInsets.all(16.0),
-          border: OutlineInputBorder(
-              borderRadius: BorderRadius.all(Radius.circular(40.0))
+            textAlign: TextAlign.center,
+            onChanged: (val) {
+              password = val;
+            },
+            decoration: InputDecoration(
+              filled: true,
+              fillColor: Colors.cyan,
+              hintText: "Enter Password",
+              hintStyle: TextStyle(color: Colors.white),
+              contentPadding: EdgeInsets.all(16.0),
+              border: OutlineInputBorder(
+                  borderRadius: BorderRadius.all(Radius.circular(40.0))),
+              enabledBorder: OutlineInputBorder(
+                borderSide:
+                    BorderSide(color: Colors.lightBlueAccent, width: 1.0),
+                borderRadius: BorderRadius.all(Radius.circular(40.0)),
+              ),
+            ),
           ),
-        enabledBorder: OutlineInputBorder(
-          borderSide:
-          BorderSide(color: Colors.lightBlueAccent, width: 1.0),
-          borderRadius: BorderRadius.all(Radius.circular(40.0)),
-        ),
-      ),
-    ),
+          SizedBox(
+            height: 25.0,
+          ),
+          RaisedButton(
+            color: Colors.green,
+            child: Text("Log In"),
+            onPressed: (){
+              Alert(context: context,
+                title: "Wrong Input",
+                desc: "Please Enter all the fields.",
+                buttons: [
+                  DialogButton(child: Text("OK"),onPressed:() => Navigator.pop(context),)
+                ]
+              ).show();
+            },
+          )
         ],
       ),
     );
