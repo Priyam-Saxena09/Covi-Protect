@@ -96,13 +96,21 @@ class _SignUpPageState extends State<SignUpPage> {
             padding: EdgeInsets.symmetric(horizontal: 35.0, vertical: 15.0),
             onPressed: () {
               if (name == null || email == null || password == null) {
-                 Alert(context: context,
-                 title: "Wrong Input",
-                 desc: "Please Enter all the fields",buttons: [
-                   DialogButton(child: Text("OK"), onPressed:(){
-                     Navigator.pop(context);
-                   })
-                  ]) .show();
+                Alert(
+                    context: context,
+                    title: "Wrong Input",
+                    desc: "Please Enter all the fields",
+                    buttons: [
+                      DialogButton(
+                          child: Text("OK"),
+                          onPressed: () {
+                            Navigator.pop(context);
+                          })
+                    ]).show();
+              } else {
+                Navigator.push(context, MaterialPageRoute(builder: (context) {
+                  return LoginPage();
+                }));
               }
             },
           ),
@@ -121,7 +129,12 @@ class _SignUpPageState extends State<SignUpPage> {
                 ),
               ),
               RaisedButton(
-                  onPressed: () {},
+                  onPressed: () {
+                    Navigator.push(context,
+                        MaterialPageRoute(builder: (context) {
+                      return LoginPage();
+                    }));
+                  },
                   color: Colors.blueAccent,
                   child: Text("Log In"),
                   shape: RoundedRectangleBorder(
