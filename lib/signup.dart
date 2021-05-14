@@ -6,6 +6,9 @@ class SignUpPage extends StatefulWidget {
 }
 
 class _SignUpPageState extends State<SignUpPage> {
+  String name;
+  String email;
+  String password;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -25,12 +28,17 @@ class _SignUpPageState extends State<SignUpPage> {
           ),
           TextField(
             textAlign: TextAlign.center,
+            onChanged: (val) {
+              name = val;
+            },
             decoration: InputDecoration(
                 filled: true,
                 fillColor: Colors.indigo,
                 hintText: "Enter Your Name",
-                hintStyle:
-                    TextStyle(fontStyle: FontStyle.italic, fontSize: 20.0),
+                hintStyle: TextStyle(
+                    fontStyle: FontStyle.italic,
+                    fontSize: 20.0,
+                    color: Colors.white),
                 contentPadding: EdgeInsets.all(14.0),
                 enabledBorder: OutlineInputBorder(
                     borderRadius: BorderRadius.all(Radius.circular(28.0)))),
@@ -41,12 +49,17 @@ class _SignUpPageState extends State<SignUpPage> {
           TextField(
             keyboardType: TextInputType.emailAddress,
             textAlign: TextAlign.center,
+            onChanged: (val) {
+              email = val;
+            },
             decoration: InputDecoration(
                 filled: true,
                 fillColor: Colors.indigo,
                 hintText: "Enter Your Email",
-                hintStyle:
-                    TextStyle(fontStyle: FontStyle.italic, fontSize: 20.0),
+                hintStyle: TextStyle(
+                    fontStyle: FontStyle.italic,
+                    fontSize: 20.0,
+                    color: Colors.white),
                 contentPadding: EdgeInsets.all(14.0),
                 enabledBorder: OutlineInputBorder(
                     borderRadius: BorderRadius.all(Radius.circular(28.0)))),
@@ -57,12 +70,17 @@ class _SignUpPageState extends State<SignUpPage> {
           TextField(
             obscureText: true,
             textAlign: TextAlign.center,
+            onChanged: (val) {
+              password = val;
+            },
             decoration: InputDecoration(
                 filled: true,
                 fillColor: Colors.indigo,
                 hintText: "Enter Your Password",
-                hintStyle:
-                    TextStyle(fontStyle: FontStyle.italic, fontSize: 20.0),
+                hintStyle: TextStyle(
+                    fontStyle: FontStyle.italic,
+                    fontSize: 20.0,
+                    color: Colors.white),
                 contentPadding: EdgeInsets.all(14.0),
                 enabledBorder: OutlineInputBorder(
                     borderRadius: BorderRadius.all(Radius.circular(28.0)))),
@@ -73,10 +91,32 @@ class _SignUpPageState extends State<SignUpPage> {
           RaisedButton(
             color: Colors.lightGreen,
             child: Text("Sign Up"),
-            padding: EdgeInsets.symmetric(horizontal: 35.0,vertical: 15.0),
-            onPressed: (){
-
-            },
+            padding: EdgeInsets.symmetric(horizontal: 35.0, vertical: 15.0),
+            onPressed: () {},
+          ),
+          SizedBox(
+            height: 25.0,
+          ) ,
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Text(
+                "Already an app user?  ",
+                style: TextStyle(
+                  fontSize: 23.0,
+                  fontFamily: "Lobster",
+                  color: Colors.lightBlueAccent,
+                ),
+              ),
+              RaisedButton(
+                onPressed: () {},
+                color: Colors.blueAccent,
+                child: Text("Log In"),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(20.0)
+                )
+              )
+            ],
           )
         ],
       ),
