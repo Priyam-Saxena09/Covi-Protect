@@ -8,12 +8,33 @@ class LoginPage extends StatefulWidget {
   _LoginPageState createState() => _LoginPageState();
 }
 
-class _LoginPageState extends State<LoginPage> {
+class _LoginPageState extends State<LoginPage> with TickerProviderStateMixin{
   String email;
   String password;
+  Animation animation;
+  AnimationController controller;
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    controller = AnimationController(
+      duration: Duration(seconds: 4),
+      vsync: this,
+    );
+    animation = ColorTween(begin: Colors.blueGrey, end: Colors.lightGreenAccent).animate(
+        controller);
+    controller.forward();
+    controller.addListener(() {
+      setState(() {
+
+      });
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: animation.value,
       body: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
@@ -31,8 +52,9 @@ class _LoginPageState extends State<LoginPage> {
           TextField(
             keyboardType: TextInputType.emailAddress,
             textAlign: TextAlign.center,
-            onChanged: (val) {
-              email = val;
+            onChanged: (val)
+            {
+               email = val;
             },
             decoration: InputDecoration(
               filled: true,
@@ -55,7 +77,8 @@ class _LoginPageState extends State<LoginPage> {
           TextField(
             obscureText: true,
             textAlign: TextAlign.center,
-            onChanged: (val) {
+            onChanged: (val)
+            {
               password = val;
             },
             decoration: InputDecoration(
