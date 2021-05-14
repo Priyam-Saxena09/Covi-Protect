@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:rflutter_alert/rflutter_alert.dart';
+import 'package:covi_protect/covid_page.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({Key key}) : super(key: key);
@@ -103,13 +104,22 @@ class _LoginPageState extends State<LoginPage> with TickerProviderStateMixin{
             color: Colors.green,
             child: Text("Log In"),
             onPressed: (){
-              Alert(context: context,
-                title: "Wrong Input",
-                desc: "Please Enter all the fields.",
-                buttons: [
-                  DialogButton(child: Text("OK"),onPressed:() => Navigator.pop(context),)
-                ]
-              ).show();
+              if(email==null || password==null)
+                {
+                  Alert(context: context,
+                      title: "Wrong Input",
+                      desc: "Please Enter all the fields.",
+                      buttons: [
+                        DialogButton(child: Text("OK"),onPressed:() => Navigator.pop(context),)
+                      ]
+                  ).show();                  
+                }
+              else
+                {
+                  Navigator.push(context, MaterialPageRoute(builder: (context){
+                    return Find();
+                  }));
+                }
             },
           )
         ],
