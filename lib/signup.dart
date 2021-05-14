@@ -1,4 +1,6 @@
+import 'package:covi_protect/login.dart';
 import 'package:flutter/material.dart';
+import 'package:rflutter_alert/rflutter_alert.dart';
 
 class SignUpPage extends StatefulWidget {
   @override
@@ -92,11 +94,21 @@ class _SignUpPageState extends State<SignUpPage> {
             color: Colors.lightGreen,
             child: Text("Sign Up"),
             padding: EdgeInsets.symmetric(horizontal: 35.0, vertical: 15.0),
-            onPressed: () {},
+            onPressed: () {
+              if (name == null || email == null || password == null) {
+                 Alert(context: context,
+                 title: "Wrong Input",
+                 desc: "Please Enter all the fields",buttons: [
+                   DialogButton(child: Text("OK"), onPressed:(){
+                     Navigator.pop(context);
+                   })
+                  ]) .show();
+              }
+            },
           ),
           SizedBox(
             height: 25.0,
-          ) ,
+          ),
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
@@ -109,13 +121,11 @@ class _SignUpPageState extends State<SignUpPage> {
                 ),
               ),
               RaisedButton(
-                onPressed: () {},
-                color: Colors.blueAccent,
-                child: Text("Log In"),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(20.0)
-                )
-              )
+                  onPressed: () {},
+                  color: Colors.blueAccent,
+                  child: Text("Log In"),
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(20.0)))
             ],
           )
         ],
