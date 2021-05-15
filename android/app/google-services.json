@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "829777508447",
+    "project_id": "covi-protect",
+    "storage_bucket": "covi-protect.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:829777508447:android:cb24a8bfee1e61975483ea",
+        "android_client_info": {
+          "package_name": "com.example.covi_protect"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "829777508447-m4fkn6oh08nk215bqes96k8dk4vt98k8.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBBxOf_0yj4NXwab676MVXMGaomOnlbNNI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "829777508447-m4fkn6oh08nk215bqes96k8dk4vt98k8.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
