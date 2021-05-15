@@ -7,13 +7,33 @@ class SignUpPage extends StatefulWidget {
   _SignUpPageState createState() => _SignUpPageState();
 }
 
-class _SignUpPageState extends State<SignUpPage> {
+class _SignUpPageState extends State<SignUpPage> with SingleTickerProviderStateMixin{
   String name;
   String email;
   String password;
+  Animation animate;
+  AnimationController controller;
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    controller = AnimationController(
+        duration: Duration(seconds: 4),
+        vsync: this
+    );
+    animate = ColorTween(begin: Colors.black54,end:Colors.amberAccent).animate(controller);
+    controller.forward();
+    controller.addListener(() {
+      setState(() {
+
+      });
+    });
+  }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: animate.value,
       body: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
