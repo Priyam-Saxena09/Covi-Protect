@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:rflutter_alert/rflutter_alert.dart';
 import 'package:covi_protect/covid_page.dart';
@@ -9,11 +10,12 @@ class LoginPage extends StatefulWidget {
   _LoginPageState createState() => _LoginPageState();
 }
 
-class _LoginPageState extends State<LoginPage> with TickerProviderStateMixin{
+class _LoginPageState extends State<LoginPage> with TickerProviderStateMixin {
   String email;
   String password;
   Animation animation;
   AnimationController controller;
+  final _auth = FirebaseAuth.instance;
   @override
   void initState() {
     // TODO: implement initState
@@ -22,13 +24,11 @@ class _LoginPageState extends State<LoginPage> with TickerProviderStateMixin{
       duration: Duration(seconds: 4),
       vsync: this,
     );
-    animation = ColorTween(begin: Colors.blueGrey, end: Colors.lightGreenAccent).animate(
-        controller);
+    animation = ColorTween(begin: Colors.blueGrey, end: Colors.lightGreenAccent)
+        .animate(controller);
     controller.forward();
     controller.addListener(() {
-      setState(() {
-
-      });
+      setState(() {});
     });
   }
 
@@ -53,9 +53,8 @@ class _LoginPageState extends State<LoginPage> with TickerProviderStateMixin{
           TextField(
             keyboardType: TextInputType.emailAddress,
             textAlign: TextAlign.center,
-            onChanged: (val)
-            {
-               email = val;
+            onChanged: (val) {
+              email = val;
             },
             decoration: InputDecoration(
               filled: true,
@@ -78,8 +77,7 @@ class _LoginPageState extends State<LoginPage> with TickerProviderStateMixin{
           TextField(
             obscureText: true,
             textAlign: TextAlign.center,
-            onChanged: (val)
-            {
+            onChanged: (val) {
               password = val;
             },
             decoration: InputDecoration(
@@ -103,23 +101,42 @@ class _LoginPageState extends State<LoginPage> with TickerProviderStateMixin{
           RaisedButton(
             color: Colors.green,
             child: Text("Log In"),
-            onPressed: (){
-              if(email==null || password==null)
-                {
-                  Alert(context: context,
+            onPressed: () async{
+              if (email == null || password == null) {
+                Alert(
+                    context: context,
+                    title: "Wrong Input",
+                    desc: "Please Enter all the fields.",
+                    buttons: [
+                      DialogButton(
+                        child: Text("OK"),
+                        onPressed: () => Navigator.pop(context),
+                      )
+                    ]).show();
+              } else {
+                try {
+                  final user = await _auth.signInWithEmailAndPassword(
+                      email: email, password: password);
+                  if (user!=null) {
+                    print(user);
+                    Navigator.push(context,
+                        MaterialPageRoute(builder: (context) {
+                      return Find();
+                    }));
+                  }
+                } catch (e) {
+                  Alert(
+                      context: context,
                       title: "Wrong Input",
-                      desc: "Please Enter all the fields.",
+                      desc: "User Not Found.",
                       buttons: [
-                        DialogButton(child: Text("OK"),onPressed:() => Navigator.pop(context),)
-                      ]
-                  ).show();                  
+                        DialogButton(
+                          child: Text("OK"),
+                          onPressed: () => Navigator.pop(context),
+                        )
+                      ]).show();
                 }
-              else
-                {
-                  Navigator.push(context, MaterialPageRoute(builder: (context){
-                    return Find();
-                  }));
-                }
+              }
             },
           )
         ],
