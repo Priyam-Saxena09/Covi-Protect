@@ -1,6 +1,7 @@
 import 'package:covi_protect/login.dart';
 import 'package:flutter/material.dart';
 import 'package:rflutter_alert/rflutter_alert.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 class SignUpPage extends StatefulWidget {
   @override
@@ -8,6 +9,7 @@ class SignUpPage extends StatefulWidget {
 }
 
 class _SignUpPageState extends State<SignUpPage> with SingleTickerProviderStateMixin{
+  final _auth = FirebaseAuth.instance;
   String name;
   String email;
   String password;
@@ -114,7 +116,7 @@ class _SignUpPageState extends State<SignUpPage> with SingleTickerProviderStateM
             color: Colors.lightGreen,
             child: Text("Sign Up"),
             padding: EdgeInsets.symmetric(horizontal: 35.0, vertical: 15.0),
-            onPressed: () {
+            onPressed: () async{
               if (name == null || email == null || password == null) {
                 Alert(
                     context: context,
@@ -128,9 +130,30 @@ class _SignUpPageState extends State<SignUpPage> with SingleTickerProviderStateM
                           })
                     ]).show();
               } else {
-                Navigator.push(context, MaterialPageRoute(builder: (context) {
-                  return LoginPage();
-                }));
+                final newUser = await _auth.createUserWithEmailAndPassword(email:email,password:password);
+                if(newUser!=null)
+                  {
+                    UserUpdateInfo info = UserUpdateInfo();
+                    info.displayName = name;
+                    newUser.updateProfile(info);
+                    Navigator.push(context, MaterialPageRoute(builder: (context) {
+                      return LoginPage();
+                    }));
+                  }
+                else
+                  {
+                    Alert(
+                        context: context,
+                        title: "Wrong Input",
+                        desc: "Invalid name or email or password",
+                        buttons: [
+                          DialogButton(
+                              child: Text("OK"),
+                              onPressed: () {
+                                Navigator.pop(context);
+                              })
+                        ]).show();
+                  }
               }
             },
           ),
