@@ -8,7 +8,8 @@ class SignUpPage extends StatefulWidget {
   _SignUpPageState createState() => _SignUpPageState();
 }
 
-class _SignUpPageState extends State<SignUpPage> with SingleTickerProviderStateMixin{
+class _SignUpPageState extends State<SignUpPage>
+    with SingleTickerProviderStateMixin {
   final _auth = FirebaseAuth.instance;
   String name;
   String email;
@@ -20,18 +21,16 @@ class _SignUpPageState extends State<SignUpPage> with SingleTickerProviderStateM
   void initState() {
     // TODO: implement initState
     super.initState();
-    controller = AnimationController(
-        duration: Duration(seconds: 4),
-        vsync: this
-    );
-    animate = ColorTween(begin: Colors.black54,end:Colors.amberAccent).animate(controller);
+    controller =
+        AnimationController(duration: Duration(seconds: 4), vsync: this);
+    animate = ColorTween(begin: Colors.black54, end: Colors.amberAccent)
+        .animate(controller);
     controller.forward();
     controller.addListener(() {
-      setState(() {
-
-      });
+      setState(() {});
     });
   }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -116,7 +115,7 @@ class _SignUpPageState extends State<SignUpPage> with SingleTickerProviderStateM
             color: Colors.lightGreen,
             child: Text("Sign Up"),
             padding: EdgeInsets.symmetric(horizontal: 35.0, vertical: 15.0),
-            onPressed: () async{
+            onPressed: () async {
               if (name == null || email == null || password == null) {
                 Alert(
                     context: context,
@@ -130,30 +129,31 @@ class _SignUpPageState extends State<SignUpPage> with SingleTickerProviderStateM
                           })
                     ]).show();
               } else {
-                final newUser = await _auth.createUserWithEmailAndPassword(email:email,password:password);
-                if(newUser!=null)
-                  {
+                try {
+                  final newUser = await _auth.createUserWithEmailAndPassword(
+                      email: email, password: password);
+                  if (newUser != null) {
                     UserUpdateInfo info = UserUpdateInfo();
                     info.displayName = name;
                     newUser.updateProfile(info);
-                    Navigator.push(context, MaterialPageRoute(builder: (context) {
+                    Navigator.push(context,
+                        MaterialPageRoute(builder: (context) {
                       return LoginPage();
                     }));
                   }
-                else
-                  {
-                    Alert(
-                        context: context,
-                        title: "Wrong Input",
-                        desc: "Invalid name or email or password",
-                        buttons: [
-                          DialogButton(
-                              child: Text("OK"),
-                              onPressed: () {
-                                Navigator.pop(context);
-                              })
-                        ]).show();
-                  }
+                } catch (e) {
+                  Alert(
+                      context: context,
+                      title: "Wrong Input",
+                      desc: "Invalid Input or email already in use",
+                      buttons: [
+                        DialogButton(
+                            child: Text("OK"),
+                            onPressed: () {
+                              Navigator.pop(context);
+                            })
+                      ]).show();
+                }
               }
             },
           ),
