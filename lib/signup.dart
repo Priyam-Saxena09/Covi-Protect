@@ -138,10 +138,11 @@ class _SignUpPageState extends State<SignUpPage>
                     newUser.updateProfile(info);
                     Navigator.push(context,
                         MaterialPageRoute(builder: (context) {
-                      return LoginPage();
+                      return LoginPage(name:name);
                     }));
                   }
                 } catch (e) {
+                  print(e);
                   Alert(
                       context: context,
                       title: "Wrong Input",

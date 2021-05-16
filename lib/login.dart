@@ -1,13 +1,15 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:rflutter_alert/rflutter_alert.dart';
 import 'package:covi_protect/covid_page.dart';
 
 class LoginPage extends StatefulWidget {
-  const LoginPage({Key key}) : super(key: key);
+  String name;
+  LoginPage({this.name});
 
   @override
-  _LoginPageState createState() => _LoginPageState();
+  _LoginPageState createState() => _LoginPageState(Name:name);
 }
 
 class _LoginPageState extends State<LoginPage> with TickerProviderStateMixin {
@@ -15,10 +17,21 @@ class _LoginPageState extends State<LoginPage> with TickerProviderStateMixin {
   String password;
   Animation animation;
   AnimationController controller;
+  String Name;
+  final instance = Firestore.instance;
   final _auth = FirebaseAuth.instance;
+  _LoginPageState({this.Name});
+  void saveUser()
+  {
+    instance.collection('Users').add({
+      "Name":Name,
+      "Location":[0.0,0.0]
+    });
+  }
   @override
   void initState() {
     // TODO: implement initState
+    saveUser();
     super.initState();
     controller = AnimationController(
       duration: Duration(seconds: 4),
@@ -118,7 +131,7 @@ class _LoginPageState extends State<LoginPage> with TickerProviderStateMixin {
                   final user = await _auth.signInWithEmailAndPassword(
                       email: email, password: password);
                   if (user!=null) {
-                    print(user);
+                    //print(user);
                     Navigator.push(context,
                         MaterialPageRoute(builder: (context) {
                       return Find();

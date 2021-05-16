@@ -6,8 +6,9 @@ class Find extends StatefulWidget {
   _FindState createState() => _FindState();
 }
 
-class _FindState extends State<Find> {
-  @override
+class _FindState extends State<Find> {  
+  double lat = 0.0;
+  double lon = 0.0;
   Future<Position> getCor()
   async{
     Position position = await Geolocator().getCurrentPosition(desiredAccuracy: LocationAccuracy.best);
@@ -17,8 +18,6 @@ class _FindState extends State<Find> {
       lon = position.longitude;
     });
   }
-  double lat = 0.0;
-  double lon = 0.0;
   @override
   Widget build(BuildContext context) {
     getCor();
@@ -46,7 +45,7 @@ class _FindState extends State<Find> {
             SizedBox(
               height: 25.0,
             ),
-            Text("Priyam Saxena",style: TextStyle(
+            Text("Prik",style: TextStyle(
               fontSize: 28.0,
               color: Colors.amber,
             ),)
