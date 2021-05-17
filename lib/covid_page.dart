@@ -1,14 +1,20 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 
 class Find extends StatefulWidget {
+  String Name;
+  Find({this.Name});
   @override
-  _FindState createState() => _FindState();
+  _FindState createState() => _FindState(name:Name);
 }
 
 class _FindState extends State<Find> {  
   double lat = 0.0;
   double lon = 0.0;
+  final userStore = Firestore.instance;
+  String name;
+  _FindState({this.name});
   Future<Position> getCor()
   async{
     Position position = await Geolocator().getCurrentPosition(desiredAccuracy: LocationAccuracy.best);
@@ -16,6 +22,7 @@ class _FindState extends State<Find> {
       print(position);
       lat = position.latitude;
       lon = position.longitude;
+      userStore.collection("Users").document(name).updateData({"Location":[lat,lon]});
     });
   }
   @override
@@ -45,7 +52,7 @@ class _FindState extends State<Find> {
             SizedBox(
               height: 25.0,
             ),
-            Text("Prik",style: TextStyle(
+            Text(name,style: TextStyle(
               fontSize: 28.0,
               color: Colors.amber,
             ),)

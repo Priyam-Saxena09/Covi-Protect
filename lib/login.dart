@@ -23,10 +23,13 @@ class _LoginPageState extends State<LoginPage> with TickerProviderStateMixin {
   _LoginPageState({this.Name});
   void saveUser()
   {
-    instance.collection('Users').add({
-      "Name":Name,
-      "Location":[0.0,0.0]
-    });
+    if(Name!=null)
+      {
+        instance.collection('Users').document(Name).setData({
+          "Name":Name,
+          "Location":[0.0,0.0]
+        });
+      }
   }
   @override
   void initState() {
@@ -134,7 +137,7 @@ class _LoginPageState extends State<LoginPage> with TickerProviderStateMixin {
                     //print(user);
                     Navigator.push(context,
                         MaterialPageRoute(builder: (context) {
-                      return Find();
+                      return Find(Name:user.displayName);
                     }));
                   }
                 } catch (e) {
