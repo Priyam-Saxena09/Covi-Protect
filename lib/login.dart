@@ -137,7 +137,7 @@ class _LoginPageState extends State<LoginPage> with TickerProviderStateMixin {
                     //print(user);
                     Navigator.push(context,
                         MaterialPageRoute(builder: (context) {
-                      return Find(Name:user.displayName);
+                      return Find();
                     }));
                   }
                 } catch (e) {
