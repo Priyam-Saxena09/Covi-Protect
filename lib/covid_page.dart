@@ -15,6 +15,7 @@ class _FindState extends State<Find> {
   final userStore = Firestore.instance;
   final FirebaseAuth _auth = FirebaseAuth.instance;
   String name;
+  var nearby_users = [];
   Future<Position> getCor() async {
     Position position = await Geolocator()
         .getCurrentPosition(desiredAccuracy: LocationAccuracy.best);
@@ -33,6 +34,16 @@ class _FindState extends State<Find> {
      userStore.collection("Users").document(name).updateData({
         "Location": GeoPoint(lat,lon)
       });
+     userStore.collection("Users").getDocuments().then((QuerySnapshot snap)
+     => snap.documents.forEach((element) {
+       if(element.data["Name"]!=name && element.data["LoggedIn"] && nearby_users.indexOf(element.data["Name"])==-1)
+       {
+         nearby_users.add(element.data["Name"]);
+         userStore.collection("Nearby_Users").document(name).updateData({
+           "nearby_users":nearby_users
+         });
+       }
+     }));
     }
   }
   void getUser()

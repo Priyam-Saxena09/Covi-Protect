@@ -30,6 +30,10 @@ class _LoginPageState extends State<LoginPage> with TickerProviderStateMixin {
           "Location":GeoPoint(0, 0),
           "LoggedIn":false
         });
+        instance.collection("Nearby_Users").document(Name).setData({
+          "Name":Name,
+          "nearby_users":[]
+        });
       }
   }
   @override
