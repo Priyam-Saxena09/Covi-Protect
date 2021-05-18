@@ -27,7 +27,8 @@ class _LoginPageState extends State<LoginPage> with TickerProviderStateMixin {
       {
         instance.collection('Users').document(Name).setData({
           "Name":Name,
-          "Location":GeoPoint(0, 0)
+          "Location":GeoPoint(0, 0),
+          "LoggedIn":false
         });
       }
   }

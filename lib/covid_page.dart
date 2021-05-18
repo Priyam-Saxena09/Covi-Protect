@@ -15,11 +15,10 @@ class _FindState extends State<Find> {
   final userStore = Firestore.instance;
   final FirebaseAuth _auth = FirebaseAuth.instance;
   String name;
-  bool signOut;
   Future<Position> getCor() async {
     Position position = await Geolocator()
         .getCurrentPosition(desiredAccuracy: LocationAccuracy.best);
-    if(name!=null && !signOut) {
+    if(name!=null) {
       setState(() {
         print(position);
         lat = position.latitude;
@@ -31,7 +30,7 @@ class _FindState extends State<Find> {
   void updateLocation()async{
     if(name!=null)
     {
-     await userStore.collection("Users").document(name).updateData({
+     userStore.collection("Users").document(name).updateData({
         "Location": GeoPoint(lat,lon)
       });
     }
@@ -42,13 +41,15 @@ class _FindState extends State<Find> {
     if(user!=null)
       {
         name = user.displayName;
+        userStore.collection("Users").document(name).updateData({
+          "LoggedIn": true
+        });
       }
   }
 @override
   void initState() {
     // TODO: implement initState
     super.initState();
-    signOut = false;
     getUser();
   }
   @override
@@ -93,8 +94,10 @@ class _FindState extends State<Find> {
             ),
             FlatButton(onPressed: ()
             {
-              signOut = true;
               _auth.signOut();
+              userStore.collection("Users").document(name).updateData({
+                "LoggedIn": false
+              });
               Navigator.pop(context);
               Navigator.pop(context);
             }, child: Text("Sign Out"),color: Colors.black45,)
