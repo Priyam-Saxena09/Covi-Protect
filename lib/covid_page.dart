@@ -32,7 +32,7 @@ class _FindState extends State<Find> {
     if(name!=null)
     {
      await userStore.collection("Users").document(name).updateData({
-        "Location": [lat, lon]
+        "Location": GeoPoint(lat,lon)
       });
     }
   }
