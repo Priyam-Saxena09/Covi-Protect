@@ -55,6 +55,13 @@ class _FindState extends State<Find> {
         userStore.collection("Users").document(name).updateData({
           "LoggedIn": true
         });
+        userStore.collection("Nearby_Users").getDocuments().then((QuerySnapshot snap) =>
+            snap.documents.forEach((element) { if(element.data["Name"]==name)
+            {
+              nearby_users.add(element.data["nearby_users"]);
+            }
+            })
+        );
       }
   }
 @override
@@ -67,6 +74,7 @@ class _FindState extends State<Find> {
   Widget build(BuildContext context) {
     getCor();
     print(name);
+    print(nearby_users);
     return Scaffold(
       appBar: AppBar(
         title: Center(
