@@ -72,6 +72,7 @@ class _LoginPageState extends State<LoginPage> with TickerProviderStateMixin {
             height: 20.0,
           ),
           TextField(
+            controller: TextEditingController(),
             keyboardType: TextInputType.emailAddress,
             textAlign: TextAlign.center,
             onChanged: (val) {
@@ -96,6 +97,7 @@ class _LoginPageState extends State<LoginPage> with TickerProviderStateMixin {
             height: 25.0,
           ),
           TextField(
+            controller: TextEditingController(),
             obscureText: true,
             textAlign: TextAlign.center,
             onChanged: (val) {
