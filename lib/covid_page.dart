@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:covi_protect/login.dart';
+import 'package:vector_math/vector_math.dart' hide Colors;
+import 'dart:math';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
@@ -38,10 +39,13 @@ class _FindState extends State<Find> {
      => snap.documents.forEach((element) {
        if(element.data["Name"]!=name && element.data["LoggedIn"] && nearby_users.indexOf(element.data["Name"])==-1)
        {
-         nearby_users.add(element.data["Name"]);
-         userStore.collection("Nearby_Users").document(name).updateData({
-           "nearby_users":nearby_users
-         });
+         if(getDistance(lat,element.data["Location"][0] , lon, element.data["Location"][1])<2.0)
+           {
+             nearby_users.add(element.data["Name"]);
+             userStore.collection("Nearby_Users").document(name).updateData({
+               "nearby_users":nearby_users
+             });
+           }
        }
      }));
     }
@@ -52,17 +56,32 @@ class _FindState extends State<Find> {
     if(user!=null)
       {
         name = user.displayName;
-        userStore.collection("Users").document(name).updateData({
+        await userStore.collection("Users").document(name).updateData({
           "LoggedIn": true
         });
-        userStore.collection("Nearby_Users").getDocuments().then((QuerySnapshot snap) =>
-            snap.documents.forEach((element) { if(element.data["Name"]==name)
-            {
-              nearby_users.add(element.data["nearby_users"]);
-            }
-            })
+        await userStore.collection("Nearby_Users").getDocuments()
+            .then((QuerySnapshot) => QuerySnapshot.documents.forEach((element) {
+              if(element.data["Name"]==name)
+                {
+                  nearby_users = element.data["nearby_users"];
+                }
+
+        })
+        //nearby_users =  DocumentSnapshot.data["nearby_users"]);
         );
       }
+  }
+  double getDistance(double lat1, double lat2, double lon1, double lon2)
+  {
+    lat1 = radians(lat1);
+    lat2 = radians(lat2);
+    lon1 = radians(lon1);
+    lon2 = radians(lon2);
+    double dlon = lon2 - lon1;
+    double dlat = lat2 - lat1;
+    double a = pow(sin(dlat / 2), 2) + cos(lat1) * cos(lat2) * pow(sin(dlon / 2),2);
+    double c = 2 * asin(sqrt(a));
+    return c*6371*1000;
   }
 @override
   void initState() {
@@ -73,7 +92,7 @@ class _FindState extends State<Find> {
   @override
   Widget build(BuildContext context) {
     getCor();
-    print(name);
+    //print(name);
     print(nearby_users);
     return Scaffold(
       appBar: AppBar(
