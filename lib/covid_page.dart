@@ -37,9 +37,11 @@ class _FindState extends State<Find> {
       });
      userStore.collection("Users").getDocuments().then((QuerySnapshot snap)
      => snap.documents.forEach((element) {
+       print(getDistance(element.data["Location"].latitude ,26.0, element.data["Location"].longitude, 81.0));
        if(element.data["Name"]!=name && element.data["LoggedIn"] && nearby_users.indexOf(element.data["Name"])==-1)
        {
-         if(getDistance(lat,element.data["Location"][0] , lon, element.data["Location"][1])<2.0)
+         print(getDistance(lat,element.data["Location"].latitude , lon, element.data["Location"].longitude));
+         if(getDistance(lat,element.data["Location"][0] , lon, element.data["Location"][1])<2000.0)
            {
              nearby_users.add(element.data["Name"]);
              userStore.collection("Nearby_Users").document(name).updateData({
@@ -56,18 +58,17 @@ class _FindState extends State<Find> {
     if(user!=null)
       {
         name = user.displayName;
+        print(name);
         await userStore.collection("Users").document(name).updateData({
           "LoggedIn": true
         });
-        await userStore.collection("Nearby_Users").getDocuments()
+        userStore.collection("Nearby_Users").getDocuments()
             .then((QuerySnapshot) => QuerySnapshot.documents.forEach((element) {
               if(element.data["Name"]==name)
                 {
                   nearby_users = element.data["nearby_users"];
                 }
-
         })
-        //nearby_users =  DocumentSnapshot.data["nearby_users"]);
         );
       }
   }
@@ -92,7 +93,7 @@ class _FindState extends State<Find> {
   @override
   Widget build(BuildContext context) {
     getCor();
-    //print(name);
+    print(name);
     print(nearby_users);
     return Scaffold(
       appBar: AppBar(
@@ -132,10 +133,10 @@ class _FindState extends State<Find> {
             ),
             FlatButton(onPressed: ()
             {
-              _auth.signOut();
               userStore.collection("Users").document(name).updateData({
                 "LoggedIn": false
               });
+              _auth.signOut();
               Navigator.pop(context);
               Navigator.pop(context);
             }, child: Text("Sign Out"),color: Colors.black45,)
