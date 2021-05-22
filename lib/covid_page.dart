@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:rflutter_alert/rflutter_alert.dart';
 import 'package:vector_math/vector_math.dart' hide Colors;
 import 'dart:math';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -136,8 +137,8 @@ class _FindState extends State<Find> {
               userStore.collection("Users").document(name).updateData({
                 "LoggedIn": false
               });
-              name=null;
               _auth.signOut();
+              name=null;
               Navigator.pop(context);
               Navigator.pop(context);
             }, child: Text("Sign Out"),color: Colors.black45,)
@@ -186,7 +187,17 @@ class _FindState extends State<Find> {
                 shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(11.0)),
                 onPressed: () {
-                  print("A");
+                  Alert(context: context,
+                      title: "Covid Status Check",
+                      desc: "Are you sure about your Covid Status?",
+                      buttons: [
+                        DialogButton(child: Text("Yes"), onPressed: (){
+
+                        }),
+                        DialogButton(child: Text("No"), onPressed: (){
+                          Navigator.pop(context);
+                        })
+                      ]).show();
                 },
               ),
             ],
