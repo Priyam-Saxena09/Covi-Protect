@@ -37,11 +37,11 @@ class _FindState extends State<Find> {
       });
      userStore.collection("Users").getDocuments().then((QuerySnapshot snap)
      => snap.documents.forEach((element) {
-       print(getDistance(element.data["Location"].latitude ,26.0, element.data["Location"].longitude, 81.0));
+       print(getDistance(element.data["Location"].latitude ,26.2187463, element.data["Location"].longitude, 81.8205575));
        if(element.data["Name"]!=name && element.data["LoggedIn"] && nearby_users.indexOf(element.data["Name"])==-1)
        {
-         print(getDistance(lat,element.data["Location"].latitude , lon, element.data["Location"].longitude));
-         if(getDistance(lat,element.data["Location"][0] , lon, element.data["Location"][1])<2000.0)
+         //print(getDistance(lat,element.data["Location"].latitude , lon, element.data["Location"].longitude));
+         if(getDistance(lat,element.data["Location"][0] , lon, element.data["Location"][1])<2.0)
            {
              nearby_users.add(element.data["Name"]);
              userStore.collection("Nearby_Users").document(name).updateData({
@@ -58,7 +58,7 @@ class _FindState extends State<Find> {
     if(user!=null)
       {
         name = user.displayName;
-        print(name);
+        //print(name);
         await userStore.collection("Users").document(name).updateData({
           "LoggedIn": true
         });
@@ -78,11 +78,11 @@ class _FindState extends State<Find> {
     lat2 = radians(lat2);
     lon1 = radians(lon1);
     lon2 = radians(lon2);
-    double dlon = lon2 - lon1;
-    double dlat = lat2 - lat1;
-    double a = pow(sin(dlat / 2), 2) + cos(lat1) * cos(lat2) * pow(sin(dlon / 2),2);
+    double dlon = radians(lon2 - lon1);
+    double dlat = radians(lat2 - lat1);
+    double a = pow(sin(dlat / 2), 2) + pow(sin(dlon / 2), 2)*cos(lat1)*cos(lat2);
     double c = 2 * asin(sqrt(a));
-    return c*6371*1000;
+    return c*6371.0*1000.0;
   }
 @override
   void initState() {
@@ -93,8 +93,8 @@ class _FindState extends State<Find> {
   @override
   Widget build(BuildContext context) {
     getCor();
-    print(name);
-    print(nearby_users);
+    //print(name);
+    //print(nearby_users);
     return Scaffold(
       appBar: AppBar(
         title: Center(
@@ -136,6 +136,7 @@ class _FindState extends State<Find> {
               userStore.collection("Users").document(name).updateData({
                 "LoggedIn": false
               });
+              name=null;
               _auth.signOut();
               Navigator.pop(context);
               Navigator.pop(context);
