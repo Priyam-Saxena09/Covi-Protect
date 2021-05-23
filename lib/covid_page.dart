@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:rflutter_alert/rflutter_alert.dart';
 import 'package:vector_math/vector_math.dart' hide Colors;
 import 'dart:math';
@@ -101,7 +102,14 @@ class _FindState extends State<Find> {
         InitializationSettings(settingsAndroid, settingsIOS),
         onSelectNotification: onSelectNotification);
   }
-  Future onSelectNotification(String payload) async{}
+  Future onSelectNotification(String payload) async{
+    Fluttertoast.showToast(msg: "All the people near you will get notified about your covid status soon.Please Isolate Yourself.",
+        gravity: ToastGravity.BOTTOM,
+        timeInSecForIos: 4,
+        backgroundColor: Colors.black54,
+        textColor: Colors.blueAccent
+    );
+  }
   @override
   Widget build(BuildContext context) {
     getCor();
