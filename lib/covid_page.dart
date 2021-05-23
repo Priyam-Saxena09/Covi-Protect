@@ -1,10 +1,12 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:rflutter_alert/rflutter_alert.dart';
 import 'package:vector_math/vector_math.dart' hide Colors;
 import 'dart:math';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
+import 'package:covi_protect/Notify/notification_helper.dart';
 
 class Find extends StatefulWidget {
   @override
@@ -12,6 +14,7 @@ class Find extends StatefulWidget {
 }
 
 class _FindState extends State<Find> {
+  final notifications = FlutterLocalNotificationsPlugin();
   double lat = 0.0;
   double lon = 0.0;
   final userStore = Firestore.instance;
@@ -90,7 +93,15 @@ class _FindState extends State<Find> {
     // TODO: implement initState
     super.initState();
     getUser();
+    final settingsAndroid = AndroidInitializationSettings('@mipmap/ic_launcher');
+    final settingsIOS = IOSInitializationSettings(
+        onDidReceiveLocalNotification: (id, title, body, payload) =>
+            onSelectNotification(payload));
+    notifications.initialize(
+        InitializationSettings(settingsAndroid, settingsIOS),
+        onSelectNotification: onSelectNotification);
   }
+  Future onSelectNotification(String payload) async{}
   @override
   Widget build(BuildContext context) {
     getCor();
@@ -192,7 +203,7 @@ class _FindState extends State<Find> {
                       desc: "Are you sure about your Covid Status?",
                       buttons: [
                         DialogButton(child: Text("Yes"), onPressed: (){
-
+                          showOngoingNotification(notifications, title: "Alert", body: "Someone near you is Covid +ve");
                         }),
                         DialogButton(child: Text("No"), onPressed: (){
                           Navigator.pop(context);
