@@ -22,6 +22,7 @@ class _FindState extends State<Find> {
   final FirebaseAuth _auth = FirebaseAuth.instance;
   String name;
   var nearby_users = [];
+  int covid_count=0;
   Future<Position> getCor() async {
     Position position = await Geolocator()
         .getCurrentPosition(desiredAccuracy: LocationAccuracy.best);
@@ -91,6 +92,7 @@ class _FindState extends State<Find> {
     double c = 2 * asin(sqrt(a));
     return c*6371.0*1000.0;
   }
+
 @override
   void initState() {
     // TODO: implement initState
@@ -105,15 +107,34 @@ class _FindState extends State<Find> {
         onSelectNotification: onSelectNotification);
   }
   Future onSelectNotification(String payload) async{
-    Fluttertoast.showToast(msg: "All the people near you will get notified about your covid status soon.Please Isolate Yourself.",
+    Fluttertoast.showToast(msg: "Please Isolate Yourself.Stay safe and Stay Healthy",
         gravity: ToastGravity.BOTTOM,
         timeInSecForIos: 4,
         backgroundColor: Colors.black54,
         textColor: Colors.blueAccent
     );
   }
+  void get_Covid_nearby()
+  {
+    if(name!=null && covid_count==0)
+      {
+        userStore.collection("Nearby_Users").document(name).get().then((value) =>{
+          for(int i=0;i<value.data["nearby_users"].length;i++)
+            {
+              userStore.collection("Users").document(value.data["nearby_users"][i]).get().then((d) => {
+                if(d.data["Covid_Status"])
+                  {
+                     covid_count++,
+                     showOngoingNotification(notifications, title: "Alert!", body: "${value.data["nearby_users"][i]} is Covid +ve")
+                  }
+              })
+            }
+        });
+      }
+  }
   @override
   Widget build(BuildContext context) {
+    get_Covid_nearby();
     getCor();
     //print(name);
     //print(nearby_users);
@@ -213,7 +234,10 @@ class _FindState extends State<Find> {
                       desc: "Are you sure about your Covid Status?",
                       buttons: [
                         DialogButton(child: Text("Yes"), onPressed: (){
-                          showOngoingNotification(notifications, title: "Alert", body: "Someone near you is Covid +ve");
+                          userStore.collection("Users").document(name).updateData(
+                              {
+                                "Covid_Status":true
+                              });
                           Navigator.pop(context);
                         }),
                         DialogButton(child: Text("No"), onPressed: (){
