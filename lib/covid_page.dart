@@ -42,11 +42,13 @@ class _FindState extends State<Find> {
       });
      userStore.collection("Users").getDocuments().then((QuerySnapshot snap)
      => snap.documents.forEach((element) {
-       print(getDistance(element.data["Location"].latitude ,26.2187463, element.data["Location"].longitude, 81.8205575));
+       //print(getDistance(element.data["Location"].latitude ,26.2187463, element.data["Location"].longitude, 81.8205575));
+       double c = getDistance(lat,element.data["Location"].latitude, lon, element.data["Location"].longitude);
+       print(c);
+       print(c<2.0);
        if(element.data["Name"]!=name && element.data["LoggedIn"] && nearby_users.indexOf(element.data["Name"])==-1)
        {
-         //print(getDistance(lat,element.data["Location"].latitude , lon, element.data["Location"].longitude));
-         if(getDistance(lat,element.data["Location"][0] , lon, element.data["Location"][1])<2.0)
+         if(c<2.0)
            {
              nearby_users.add(element.data["Name"]);
              userStore.collection("Nearby_Users").document(name).updateData({
@@ -71,7 +73,7 @@ class _FindState extends State<Find> {
             .then((QuerySnapshot) => QuerySnapshot.documents.forEach((element) {
               if(element.data["Name"]==name)
                 {
-                  nearby_users = element.data["nearby_users"];
+                  nearby_users.addAll(element.data["nearby_users"]);
                 }
         })
         );
@@ -212,6 +214,7 @@ class _FindState extends State<Find> {
                       buttons: [
                         DialogButton(child: Text("Yes"), onPressed: (){
                           showOngoingNotification(notifications, title: "Alert", body: "Someone near you is Covid +ve");
+                          Navigator.pop(context);
                         }),
                         DialogButton(child: Text("No"), onPressed: (){
                           Navigator.pop(context);
