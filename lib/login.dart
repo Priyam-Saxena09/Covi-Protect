@@ -23,6 +23,8 @@ class _LoginPageState extends State<LoginPage> with TickerProviderStateMixin {
   _LoginPageState({this.Name});
   void saveUser()
   {
+    var d = DateTime.now();
+    var t = Timestamp.fromDate(d).toDate();
     if(Name!=null)
       {
         instance.collection('Users').document(Name).setData({
@@ -36,6 +38,10 @@ class _LoginPageState extends State<LoginPage> with TickerProviderStateMixin {
           "nearby_users":[]
         });
       }
+
+    print(d);
+    print(Timestamp.fromDate(d));
+    print(t);
   }
   @override
   void initState() {

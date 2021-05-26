@@ -44,14 +44,31 @@ class _FindState extends State<Find> {
      userStore.collection("Users").getDocuments().then((QuerySnapshot snap)
      => snap.documents.forEach((element) {
        //print(getDistance(element.data["Location"].latitude ,26.2187463, element.data["Location"].longitude, 81.8205575));
-       double c = getDistance(lat,element.data["Location"].latitude, lon, element.data["Location"].longitude);
-       print(c);
-       print(c<2.0);
-       if(element.data["Name"]!=name && element.data["LoggedIn"] && nearby_users.indexOf(element.data["Name"])==-1)
+       if(element.data["Name"]!=name && element.data["LoggedIn"])
        {
+         double c = getDistance(lat,element.data["Location"].latitude, lon, element.data["Location"].longitude);
+         bool flag=false;
          if(c<2.0)
            {
-             nearby_users.add(element.data["Name"]);
+             for(int i=0;i<nearby_users.length;i++)
+             {
+               if(nearby_users[i].containsKey(element.data["Name"]))
+               {
+                 var d = DateTime.now();
+                 DateTime t = Timestamp.fromDate(d).toDate();
+                 nearby_users[i][element.data["Name"]] = t;
+                 flag=true;
+                 break;
+               }
+             }
+             if(!flag)
+               {
+                 var d = DateTime.now();
+                 DateTime t = Timestamp.fromDate(d).toDate();
+                 var m = new Map();
+                 m[element.data["Name"]] = t;
+                 nearby_users.add(m);
+               }
              userStore.collection("Nearby_Users").document(name).updateData({
                "nearby_users":nearby_users
              });
@@ -121,13 +138,16 @@ class _FindState extends State<Find> {
         userStore.collection("Nearby_Users").document(name).get().then((value) =>{
           for(int i=0;i<value.data["nearby_users"].length;i++)
             {
-              userStore.collection("Users").document(value.data["nearby_users"][i]).get().then((d) => {
-                if(d.data["Covid_Status"])
-                  {
-                     covid_count++,
-                     showOngoingNotification(notifications, title: "Alert!", body: "${value.data["nearby_users"][i]} is Covid +ve")
-                  }
-              })
+              for(var nm in value.data["nearby_users"][i].keys)
+                {
+                  userStore.collection("Users").document(nm).get().then((d) => {
+                    if(d.data["Covid_Status"])
+                      {
+                        covid_count++,
+                        showOngoingNotification(notifications, title: "Alert!", body: "${nm} is Covid +ve")
+                      }
+                  })
+                }
             }
         });
       }
