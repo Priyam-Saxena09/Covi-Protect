@@ -22,11 +22,12 @@ class _FindState extends State<Find> {
   final FirebaseAuth _auth = FirebaseAuth.instance;
   String name;
   var nearby_users = [];
-  int covid_count=0;
+  int covid_count = 0;
+  int df = 0;
   Future<Position> getCor() async {
     Position position = await Geolocator()
         .getCurrentPosition(desiredAccuracy: LocationAccuracy.best);
-    if(name!=null) {
+    if (name != null) {
       setState(() {
         print(position);
         lat = position.latitude;
@@ -35,87 +36,126 @@ class _FindState extends State<Find> {
       });
     }
   }
-  void updateLocation()async{
-    if(name!=null)
-    {
-     userStore.collection("Users").document(name).updateData({
-        "Location": GeoPoint(lat,lon)
-      });
-     userStore.collection("Users").getDocuments().then((QuerySnapshot snap)
-     => snap.documents.forEach((element) {
-       //print(getDistance(element.data["Location"].latitude ,26.2187463, element.data["Location"].longitude, 81.8205575));
-       if(element.data["Name"]!=name && element.data["LoggedIn"])
-       {
-         double c = getDistance(lat,element.data["Location"].latitude, lon, element.data["Location"].longitude);
-         bool flag=false;
-         if(c<2.0)
-           {
-             for(int i=0;i<nearby_users.length;i++)
-             {
-               if(nearby_users[i].containsKey(element.data["Name"]))
-               {
-                 var d = DateTime.now();
-                 DateTime t = Timestamp.fromDate(d).toDate();
-                 nearby_users[i][element.data["Name"]] = t;
-                 flag=true;
-                 break;
-               }
-             }
-             if(!flag)
-               {
-                 var d = DateTime.now();
-                 DateTime t = Timestamp.fromDate(d).toDate();
-                 var m = new Map();
-                 m[element.data["Name"]] = t;
-                 nearby_users.add(m);
-               }
-             userStore.collection("Nearby_Users").document(name).updateData({
-               "nearby_users":nearby_users
-             });
-           }
-       }
-     }));
+
+  void updateLocation() async {
+    if (name != null) {
+      userStore
+          .collection("Users")
+          .document(name)
+          .updateData({"Location": GeoPoint(lat, lon)});
+      userStore
+          .collection("Users")
+          .getDocuments()
+          .then((QuerySnapshot snap) => snap.documents.forEach((element) {
+                //print(getDistance(element.data["Location"].latitude ,26.2187463, element.data["Location"].longitude, 81.8205575));
+                if (element.data["Name"] != name && element.data["LoggedIn"]) {
+                  double c = getDistance(lat, element.data["Location"].latitude,
+                      lon, element.data["Location"].longitude);
+                  bool flag = false;
+                  if (c < 2.0) {
+                    for (int i = 0; i < nearby_users.length; i++) {
+                      if (nearby_users[i].containsKey(element.data["Name"])) {
+                        var d = DateTime.now();
+                        DateTime t = Timestamp.fromDate(d).toDate();
+                        nearby_users[i][element.data["Name"]] = t;
+                        flag = true;
+                        break;
+                      }
+                    }
+                    if (!flag) {
+                      var d = DateTime.now();
+                      DateTime t = Timestamp.fromDate(d).toDate();
+                      var m = new Map();
+                      m[element.data["Name"]] = t;
+                      nearby_users.add(m);
+                    }
+                    userStore
+                        .collection("Nearby_Users")
+                        .document(name)
+                        .updateData({"nearby_users": nearby_users});
+                  }
+                }
+              }));
     }
   }
-  void getUser()
-  async{
+
+  void getUser() async {
     final user = await _auth.currentUser();
-    if(user!=null)
-      {
-        name = user.displayName;
-        //print(name);
-        await userStore.collection("Users").document(name).updateData({
-          "LoggedIn": true
-        });
-        userStore.collection("Nearby_Users").getDocuments()
-            .then((QuerySnapshot) => QuerySnapshot.documents.forEach((element) {
-              if(element.data["Name"]==name)
-                {
+    if (user != null) {
+      name = user.displayName;
+      //print(name);
+      await userStore
+          .collection("Users")
+          .document(name)
+          .updateData({"LoggedIn": true});
+      userStore
+          .collection("Nearby_Users")
+          .getDocuments()
+          .then((QuerySnapshot) => QuerySnapshot.documents.forEach((element) {
+                if (element.data["Name"] == name) {
                   nearby_users.addAll(element.data["nearby_users"]);
                 }
-        })
-        );
-      }
+              }));
+    }
   }
-  double getDistance(double lat1, double lat2, double lon1, double lon2)
-  {
+
+  double getDistance(double lat1, double lat2, double lon1, double lon2) {
     lat1 = radians(lat1);
     lat2 = radians(lat2);
     lon1 = radians(lon1);
     lon2 = radians(lon2);
     double dlon = radians(lon2 - lon1);
     double dlat = radians(lat2 - lat1);
-    double a = pow(sin(dlat / 2), 2) + pow(sin(dlon / 2), 2)*cos(lat1)*cos(lat2);
+    double a =
+        pow(sin(dlat / 2), 2) + pow(sin(dlon / 2), 2) * cos(lat1) * cos(lat2);
     double c = 2 * asin(sqrt(a));
-    return c*6371.0*1000.0;
+    return c * 6371.0 * 1000.0;
   }
 
-@override
+  void delete_users() {
+    DateTime d;
+    int dif;
+    List<Object> nearby;
+    if(name!=null)
+      {
+        userStore.collection("Nearby_Users").document(name).get().then((value) =>
+        {
+          for(int i = 0; i < value.data["nearby_users"].length; i++)
+            {
+              for(var n in value.data["nearby_users"][i].values)
+                {
+                  d = DateTime.now(),
+                  dif = d.difference(n.toDate()).inDays,
+                  df = dif,
+                  print(dif),
+                  if (dif >= 3)
+                    {
+                      nearby = [],
+                      for(int j=0;j<nearby_users.length;j++)
+                        {
+                          if(nearby_users[j].toString() !=  value.data["nearby_users"][i].toString())
+                            {
+                              nearby.add(nearby_users[j]),
+                            }
+                        },
+                      userStore
+                          .collection("Nearby_Users")
+                          .document(name)
+                          .updateData({"nearby_users": nearby})
+                    }
+                }
+            }
+
+        });
+      }
+    }
+    @override
   void initState() {
     // TODO: implement initState
     super.initState();
     getUser();
-    final settingsAndroid = AndroidInitializationSettings('@mipmap/ic_launcher');
+    final settingsAndroid =
+        AndroidInitializationSettings('@mipmap/ic_launcher');
     final settingsIOS = IOSInitializationSettings(
         onDidReceiveLocalNotification: (id, title, body, payload) =>
             onSelectNotification(payload));
@@ -123,39 +163,50 @@ class _FindState extends State<Find> {
         InitializationSettings(settingsAndroid, settingsIOS),
         onSelectNotification: onSelectNotification);
   }
-  Future onSelectNotification(String payload) async{
-    Fluttertoast.showToast(msg: "Please Isolate Yourself.Stay safe and Stay Healthy",
+
+  Future onSelectNotification(String payload) async {
+    Fluttertoast.showToast(
+        msg: "Please Isolate Yourself.Stay safe and Stay Healthy",
         gravity: ToastGravity.BOTTOM,
         timeInSecForIos: 4,
         backgroundColor: Colors.black54,
-        textColor: Colors.blueAccent
-    );
+        textColor: Colors.blueAccent);
   }
-  void get_Covid_nearby()
-  {
-    if(name!=null && covid_count==0)
-      {
-        userStore.collection("Nearby_Users").document(name).get().then((value) =>{
-          for(int i=0;i<value.data["nearby_users"].length;i++)
-            {
-              for(var nm in value.data["nearby_users"][i].keys)
-                {
-                  userStore.collection("Users").document(nm).get().then((d) => {
-                    if(d.data["Covid_Status"])
+  void get_Covid_nearby() {
+    if (name != null && covid_count == 0) {
+      userStore
+          .collection("Nearby_Users")
+          .document(name)
+          .get()
+          .then((value) => {
+                for (int i = 0; i < value.data["nearby_users"].length; i++)
+                  {
+                    for (var nm in value.data["nearby_users"][i].keys)
                       {
-                        covid_count++,
-                        showOngoingNotification(notifications, title: "Alert!", body: "${nm} is Covid +ve")
+                        userStore
+                            .collection("Users")
+                            .document(nm)
+                            .get()
+                            .then((d) => {
+                                  if (d.data["Covid_Status"])
+                                    {
+                                      covid_count++,
+                                      showOngoingNotification(notifications,
+                                          title: "Alert!",
+                                          body: "${nm} is Covid +ve")
+                                    }
+                                })
                       }
-                  })
-                }
-            }
-        });
-      }
+                  }
+              });
+    }
   }
+
   @override
   Widget build(BuildContext context) {
     get_Covid_nearby();
     getCor();
+    delete_users();
     //print(name);
     //print(nearby_users);
     return Scaffold(
@@ -185,7 +236,7 @@ class _FindState extends State<Find> {
               height: 25.0,
             ),
             Text(
-              name!=null?name:"",
+              name != null ? name : "",
               style: TextStyle(
                 fontSize: 28.0,
                 color: Colors.amber,
@@ -194,16 +245,20 @@ class _FindState extends State<Find> {
             SizedBox(
               height: 35.0,
             ),
-            FlatButton(onPressed: ()
-            {
-              userStore.collection("Users").document(name).updateData({
-                "LoggedIn": false
-              });
-              _auth.signOut();
-              name=null;
-              Navigator.pop(context);
-              Navigator.pop(context);
-            }, child: Text("Sign Out"),color: Colors.black45,)
+            FlatButton(
+              onPressed: () {
+                userStore
+                    .collection("Users")
+                    .document(name)
+                    .updateData({"LoggedIn": false});
+                _auth.signOut();
+                //name = null;
+                Navigator.pop(context);
+                Navigator.pop(context);
+              },
+              child: Text("Sign Out"),
+              color: Colors.black45,
+            )
           ],
         ),
       ),
@@ -249,20 +304,25 @@ class _FindState extends State<Find> {
                 shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(11.0)),
                 onPressed: () {
-                  Alert(context: context,
+                  Alert(
+                      context: context,
                       title: "Covid Status Check",
                       desc: "Are you sure about your Covid Status?",
                       buttons: [
-                        DialogButton(child: Text("Yes"), onPressed: (){
-                          userStore.collection("Users").document(name).updateData(
-                              {
-                                "Covid_Status":true
-                              });
-                          Navigator.pop(context);
-                        }),
-                        DialogButton(child: Text("No"), onPressed: (){
-                          Navigator.pop(context);
-                        })
+                        DialogButton(
+                            child: Text("Yes"),
+                            onPressed: () {
+                              userStore
+                                  .collection("Users")
+                                  .document(name)
+                                  .updateData({"Covid_Status": true});
+                              Navigator.pop(context);
+                            }),
+                        DialogButton(
+                            child: Text("No"),
+                            onPressed: () {
+                              Navigator.pop(context);
+                            })
                       ]).show();
                 },
               ),
