@@ -22,7 +22,7 @@ class _FindState extends State<Find> {
   final FirebaseAuth _auth = FirebaseAuth.instance;
   String name;
   var nearby_users = [];
-  int covid_count = 0;
+  List<String> covid_users = [];
   int df = 0;
   Future<Position> getCor() async {
     Position position = await Geolocator()
@@ -173,7 +173,7 @@ class _FindState extends State<Find> {
         textColor: Colors.blueAccent);
   }
   void get_Covid_nearby() {
-    if (name != null && covid_count == 0) {
+    if (name != null) {
       userStore
           .collection("Nearby_Users")
           .document(name)
@@ -188,9 +188,9 @@ class _FindState extends State<Find> {
                             .document(nm)
                             .get()
                             .then((d) => {
-                                  if (d.data["Covid_Status"])
+                                  if (d.data["Covid_Status"] && !covid_users.contains(nm))
                                     {
-                                      covid_count++,
+                                      covid_users.add(nm),
                                       showOngoingNotification(notifications,
                                           title: "Alert!",
                                           body: "${nm} is Covid +ve")
