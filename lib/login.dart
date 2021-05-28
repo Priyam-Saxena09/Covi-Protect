@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:covi_protect/signup.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:rflutter_alert/rflutter_alert.dart';
@@ -23,8 +24,6 @@ class _LoginPageState extends State<LoginPage> with TickerProviderStateMixin {
   _LoginPageState({this.Name});
   void saveUser()
   {
-    var d = DateTime.now();
-    var t = Timestamp.fromDate(d).toDate();
     if(Name!=null)
       {
         instance.collection('Users').document(Name).setData({
@@ -38,10 +37,6 @@ class _LoginPageState extends State<LoginPage> with TickerProviderStateMixin {
           "nearby_users":[]
         });
       }
-
-    print(d);
-    print(Timestamp.fromDate(d));
-    print(t);
   }
   @override
   void initState() {
@@ -167,6 +162,33 @@ class _LoginPageState extends State<LoginPage> with TickerProviderStateMixin {
                 }
               }
             },
+          ),
+          SizedBox(
+            height: 25.0,
+          ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Text(
+                "Are you a New User?  ",
+                style: TextStyle(
+                  fontSize: 23.0,
+                  fontFamily: "Lobster",
+                  color: Colors.lightBlueAccent,
+                ),
+              ),
+              RaisedButton(
+                  onPressed: () {
+                    Navigator.push(context,
+                        MaterialPageRoute(builder: (context) {
+                          return SignUpPage();
+                        }));
+                  },
+                  color: Colors.blueAccent,
+                  child: Text("Sign Up"),
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(20.0)))
+            ],
           )
         ],
       ),
