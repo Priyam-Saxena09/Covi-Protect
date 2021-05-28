@@ -1,6 +1,6 @@
+import 'package:covi_protect/Welcome/welcome.dart';
 import 'package:covi_protect/signup.dart';
 import 'package:flutter/material.dart';
-import 'package:covi_protect/signup.dart';
 
 void main() {
   runApp(MyApp());
@@ -11,7 +11,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       theme: ThemeData.light(),
-      home: SignUpPage(),
+      home: Welcome(),
     );
   }
 }
