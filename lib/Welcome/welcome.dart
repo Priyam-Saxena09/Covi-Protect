@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'package:animated_text_kit/animated_text_kit.dart';
 import 'package:covi_protect/signup.dart';
 import 'package:flutter/material.dart';
@@ -26,10 +27,7 @@ class _WelcomeState extends State<Welcome> with SingleTickerProviderStateMixin{
 
       });
     });
-  }
-  void switch_to_signup_page()
-  {
-    Future.delayed(const Duration(milliseconds:8000),(){
+    new Timer(Duration(seconds: 8),(){
       Navigator.push(context, MaterialPageRoute(builder: (context) {
         return SignUpPage();
       }));
@@ -37,7 +35,6 @@ class _WelcomeState extends State<Welcome> with SingleTickerProviderStateMixin{
   }
   @override
   Widget build(BuildContext context) {
-    switch_to_signup_page();
     return Scaffold(
       backgroundColor:animate.value,
         body: Center(

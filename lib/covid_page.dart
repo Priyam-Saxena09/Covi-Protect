@@ -23,7 +23,6 @@ class _FindState extends State<Find> {
   String name;
   var nearby_users = [];
   List<String> covid_users = [];
-  int df = 0;
   Future<Position> getCor() async {
     Position position = await Geolocator()
         .getCurrentPosition(desiredAccuracy: LocationAccuracy.best);
@@ -126,8 +125,6 @@ class _FindState extends State<Find> {
                 {
                   d = DateTime.now(),
                   dif = d.difference(n.toDate()).inDays,
-                  df = dif,
-                  print(dif),
                   if (dif >= 3)
                     {
                       nearby = [],
