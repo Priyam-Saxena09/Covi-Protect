@@ -14,10 +14,27 @@ class _SignUpPageState extends State<SignUpPage>
   String name;
   String email;
   String password;
+  Animation animate;
+  AnimationController controller;
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    controller =
+        AnimationController(duration: Duration(seconds: 7), vsync: this);
+    animate = ColorTween(begin: Colors.blueGrey, end: Colors.amberAccent)
+        .animate(controller);
+    controller.forward();
+    controller.addListener(() {
+      setState(() {
+
+      });
+    });
+  }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.amberAccent,
+      backgroundColor: animate.value,
       body: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
