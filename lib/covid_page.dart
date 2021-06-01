@@ -230,7 +230,7 @@ class _FindState extends State<Find> {
               child: Center(
                 child: Text("Welcome ${name != null ? name : ""}",
                   style: TextStyle(
-                    fontSize: 25.0,
+                    fontSize: 30.0,
                     fontStyle: FontStyle.italic,
                     color: Colors.amber,
                   ),
@@ -263,14 +263,14 @@ class _FindState extends State<Find> {
           constraints: BoxConstraints.expand(),
           decoration: BoxDecoration(
               image: DecorationImage(
-            image: AssetImage("images/istock.jpg"),
+            image: AssetImage("images/Corona.jpg"),
             fit: BoxFit.fill,
           )),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               Container(
-                padding: EdgeInsets.symmetric(horizontal: 14.0),
+                padding: EdgeInsets.symmetric(horizontal: 10.0),
                 child: Text(
                     "Note:Press the Below Button if you are Covid Positive",
                     style: TextStyle(
