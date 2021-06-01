@@ -163,7 +163,7 @@ class _FindState extends State<Find> {
 
   Future onSelectNotification(String payload) async {
     Fluttertoast.showToast(
-        msg: "Please Isolate Yourself.Stay safe and Stay Healthy",
+        msg: "Please Isolate Yourself.Stay safe and Stay Healthy.",
         gravity: ToastGravity.BOTTOM,
         timeInSecForIos: 4,
         backgroundColor: Colors.black54,
@@ -313,6 +313,12 @@ class _FindState extends State<Find> {
                                   .collection("Users")
                                   .document(name)
                                   .updateData({"Covid_Status": true});
+                              Fluttertoast.showToast(
+                                  msg: "All your nearby users will get notified.Get well soon.Take care.",
+                                  gravity: ToastGravity.BOTTOM,
+                                  timeInSecForIos: 4,
+                                  backgroundColor: Colors.black54,
+                                  textColor: Colors.blueAccent);
                               Navigator.pop(context);
                             }),
                         DialogButton(
