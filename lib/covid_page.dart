@@ -21,6 +21,7 @@ class _FindState extends State<Find> {
   final userStore = Firestore.instance;
   final FirebaseAuth _auth = FirebaseAuth.instance;
   String name;
+  DateTime last;
   var nearby_users = [];
   List<String> covid_users = [];
   Future<Position> getCor() async {
@@ -58,6 +59,7 @@ class _FindState extends State<Find> {
                         DateTime t = Timestamp.fromDate(d).toDate();
                         nearby_users[i][element.data["Name"]] = t;
                         flag = true;
+                        last=t;
                         break;
                       }
                     }
@@ -66,6 +68,7 @@ class _FindState extends State<Find> {
                       DateTime t = Timestamp.fromDate(d).toDate();
                       var m = new Map();
                       m[element.data["Name"]] = t;
+                      last=t;
                       nearby_users.add(m);
                     }
                     userStore
@@ -232,7 +235,8 @@ class _FindState extends State<Find> {
                   style: TextStyle(
                     fontSize: 30.0,
                     fontStyle: FontStyle.italic,
-                    color: Colors.amber,
+                    fontFamily: 'Londrina Solid',
+                    color: Colors.redAccent,
                   ),
                 ),
               )
@@ -329,6 +333,20 @@ class _FindState extends State<Find> {
                       ]).show();
                 },
               ),
+              SizedBox(
+                height: 90.0,
+              ),
+              Padding(
+                padding: EdgeInsets.symmetric(horizontal: 11.0),
+                child: Text(last==null?"As of now, There are no nearby users":
+                "Last time,You meet a person at ${last}",style: TextStyle(
+                  fontSize: 55.0,
+                  fontWeight: FontWeight.w800,
+                  fontFamily: 'Londrina Solid',
+                  color: Colors.black,
+                  fontStyle: FontStyle.italic,
+                ),),
+              )
             ],
           ),
         ),
