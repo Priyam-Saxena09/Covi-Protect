@@ -201,13 +201,14 @@ class _FindState extends State<Find> {
 
   @override
   Widget build(BuildContext context) {
+    delete_users();
     get_Covid_nearby();
     getCor();
-    delete_users();
     //print(name);
     //print(nearby_users);
     return Scaffold(
       appBar: AppBar(
+        backgroundColor: Colors.cyanAccent,
         title: Center(
           child: Text(
             "Welcome to Covi-Protect",
@@ -222,22 +223,19 @@ class _FindState extends State<Find> {
         child: Column(
           children: [
             Container(
+                padding: EdgeInsets.symmetric(horizontal: 14.0),
               color: Colors.indigo,
               width: double.infinity,
               height: 125.0,
-              child: CircleAvatar(
-                backgroundImage: AssetImage("images/istock.jpg"),
-              ),
-            ),
-            SizedBox(
-              height: 25.0,
-            ),
-            Text(
-              name != null ? name : "",
-              style: TextStyle(
-                fontSize: 28.0,
-                color: Colors.amber,
-              ),
+              child: Center(
+                child: Text("Welcome ${name != null ? name : ""}",
+                  style: TextStyle(
+                    fontSize: 25.0,
+                    fontStyle: FontStyle.italic,
+                    color: Colors.amber,
+                  ),
+                ),
+              )
             ),
             SizedBox(
               height: 35.0,
@@ -260,7 +258,7 @@ class _FindState extends State<Find> {
         ),
       ),
       body: Opacity(
-        opacity: 0.73,
+        opacity: 0.65,
         child: Container(
           constraints: BoxConstraints.expand(),
           decoration: BoxDecoration(
@@ -272,11 +270,12 @@ class _FindState extends State<Find> {
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               Container(
+                padding: EdgeInsets.symmetric(horizontal: 14.0),
                 child: Text(
                     "Note:Press the Below Button if you are Covid Positive",
                     style: TextStyle(
                         fontSize: 32.0,
-                        color: Colors.deepPurple,
+                        color: Colors.black,
                         fontStyle: FontStyle.italic,
                         fontFamily: 'Texturina',
                         fontWeight: FontWeight.bold)),
