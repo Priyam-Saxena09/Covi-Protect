@@ -242,12 +242,13 @@ class _FindState extends State<Find> {
             ),
             FlatButton(
               onPressed: () {
+                var n = name;
+                name=null;
                 userStore
                     .collection("Users")
-                    .document(name)
+                    .document(n)
                     .updateData({"LoggedIn": false});
                 _auth.signOut();
-                //name = null;
                 Navigator.pop(context);
                 Navigator.pop(context);
               },
