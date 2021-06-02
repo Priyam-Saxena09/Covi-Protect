@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:covi_protect/About%20and%20Help/about.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:rflutter_alert/rflutter_alert.dart';
@@ -8,6 +9,8 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:covi_protect/Notify/notification_helper.dart';
+
+import 'About and Help/help.dart';
 
 class Find extends StatefulWidget {
   @override
@@ -247,7 +250,9 @@ class _FindState extends State<Find> {
             FlatButton(
               minWidth: 250.0,
               onPressed: () {
-
+                    Navigator.push(context, MaterialPageRoute(builder: (context){
+                       return About();
+                   }));
               },
               child: Text("About",style: TextStyle(
                   color: Colors.white
@@ -260,7 +265,9 @@ class _FindState extends State<Find> {
             FlatButton(
               minWidth: 250.0,
               onPressed: () {
-
+                Navigator.push(context, MaterialPageRoute(builder: (context){
+                  return Help();
+                }));
               },
               child: Text("Help",style: TextStyle(
                 color: Colors.white

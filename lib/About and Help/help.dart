@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 class Help extends StatelessWidget {
   const Help({Key key}) : super(key: key);
@@ -7,19 +8,34 @@ class Help extends StatelessWidget {
     return Scaffold(
       body: Center(
         child: Container(
-          padding: EdgeInsets.symmetric(horizontal: 14.0),
+          padding: EdgeInsets.symmetric(horizontal: 14.0,vertical: 185.0),
           child: Column(
+            crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              Text("For More Information,Contact"),
+              Text("For More Information,Contact",style:TextStyle(
+                  fontSize: 25.0,
+                  fontStyle: FontStyle.italic,
+                  fontFamily: "Texturina"
+              ),),
               SizedBox(height: 16.0,),
-              Row(children: [Icon(Icons.phone),
-              SizedBox(width: 10.0,),
-                Text("6379076631")
+              Row(mainAxisAlignment: MainAxisAlignment.center,
+                children: [Icon(Icons.phone),
+              SizedBox(width: 13.0,),
+                Text("6379076631",style:TextStyle(
+                    fontSize: 25.0,
+                    fontStyle: FontStyle.italic,
+                    fontFamily: "Texturina"
+                ),)
               ],),
               SizedBox(height: 16.0,),
-              Row(children: [Icon(Icons.email),
-                SizedBox(width: 10.0,),
-                Text("priyamsaxena2k@gmail.com")
+              Row(mainAxisAlignment: MainAxisAlignment.center,
+                children: [Icon(Icons.email),
+                SizedBox(width: 13.0,),
+                Text("priyamsaxena2k@gmail.com",style:TextStyle(
+                    fontSize: 25.0,
+                    fontStyle: FontStyle.italic,
+                    fontFamily: "Texturina"
+                ),)
               ],),
             ],
           ),
