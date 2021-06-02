@@ -4,6 +4,10 @@ class About extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        backgroundColor: Colors.cyanAccent,
+        title: Center(child: Text("About")),
+      ),
       body: Center(
         child: Container(
           padding: EdgeInsets.symmetric(horizontal: 17.0),
