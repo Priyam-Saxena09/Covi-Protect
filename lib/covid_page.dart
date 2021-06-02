@@ -233,7 +233,7 @@ class _FindState extends State<Find> {
               child: Center(
                 child: Text("Welcome ${name != null ? name : ""}",
                   style: TextStyle(
-                    fontSize: 30.0,
+                    fontSize: 40.0,
                     fontStyle: FontStyle.italic,
                     fontFamily: 'Londrina Solid',
                     color: Colors.redAccent,
@@ -245,6 +245,33 @@ class _FindState extends State<Find> {
               height: 35.0,
             ),
             FlatButton(
+              minWidth: 250.0,
+              onPressed: () {
+
+              },
+              child: Text("About",style: TextStyle(
+                  color: Colors.white
+              ),),
+              color: Colors.black,
+            ),
+            SizedBox(
+              height: 35.0,
+            ),
+            FlatButton(
+              minWidth: 250.0,
+              onPressed: () {
+
+              },
+              child: Text("Help",style: TextStyle(
+                color: Colors.white
+              ),),
+              color: Colors.black,
+            ),
+            SizedBox(
+              height: 35.0,
+            ),
+            FlatButton(
+              minWidth: 250.0,
               onPressed: () {
                 var n = name;
                 name=null;
@@ -256,8 +283,10 @@ class _FindState extends State<Find> {
                 Navigator.pop(context);
                 Navigator.pop(context);
               },
-              child: Text("Sign Out"),
-              color: Colors.black45,
+              child: Text("Sign Out",style: TextStyle(
+                  color: Colors.white
+              ),),
+              color: Colors.black,
             )
           ],
         ),
@@ -271,83 +300,85 @@ class _FindState extends State<Find> {
             image: AssetImage("images/Corona.jpg"),
             fit: BoxFit.fill,
           )),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              Container(
-                padding: EdgeInsets.symmetric(horizontal: 10.0),
-                child: Text(
-                    "Note:Press the Below Button if you are Covid Positive",
-                    style: TextStyle(
-                        fontSize: 32.0,
-                        color: Colors.black,
-                        fontStyle: FontStyle.italic,
-                        fontFamily: 'Texturina',
-                        fontWeight: FontWeight.bold)),
-              ),
-              SizedBox(
-                height: 55.0,
-              ),
-              FlatButton(
-                child: Text(
-                  "COVID-19 +ve",
-                  style: TextStyle(
-                    fontSize: 20.0,
-                    fontWeight: FontWeight.w900,
-                    fontFamily: 'Lobster',
-                    color: Colors.indigo,
-                    fontStyle: FontStyle.italic,
-                  ),
+          child: SingleChildScrollView(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                Container(
+                  padding: EdgeInsets.symmetric(horizontal: 10.0),
+                  child: Text(
+                      "Note:Press the Below Button if you are Covid Positive",
+                      style: TextStyle(
+                          fontSize: 32.0,
+                          color: Colors.black,
+                          fontStyle: FontStyle.italic,
+                          fontFamily: 'Texturina',
+                          fontWeight: FontWeight.bold)),
                 ),
-                height: 40.0,
-                minWidth: 280.0,
-                color: Colors.pink,
-                shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(11.0)),
-                onPressed: () {
-                  Alert(
-                      context: context,
-                      title: "Covid Status Check",
-                      desc: "Are you sure about your Covid Status?",
-                      buttons: [
-                        DialogButton(
-                            child: Text("Yes"),
-                            onPressed: () {
-                              userStore
-                                  .collection("Users")
-                                  .document(name)
-                                  .updateData({"Covid_Status": true});
-                              Fluttertoast.showToast(
-                                  msg: "All your nearby users will get notified.Get well soon.Take care.",
-                                  gravity: ToastGravity.BOTTOM,
-                                  timeInSecForIos: 4,
-                                  backgroundColor: Colors.black54,
-                                  textColor: Colors.blueAccent);
-                              Navigator.pop(context);
-                            }),
-                        DialogButton(
-                            child: Text("No"),
-                            onPressed: () {
-                              Navigator.pop(context);
-                            })
-                      ]).show();
-                },
-              ),
-              SizedBox(
-                height: 90.0,
-              ),
-              Padding(
-                padding: EdgeInsets.symmetric(horizontal: 11.0),
-                child: Text(last==null?"As of now, There are no nearby users":
-                "Last time,You meet a person at ${last}",style: TextStyle(
-                  fontSize: 55.0,
-                  fontWeight: FontWeight.w800,
-                  fontFamily: 'Londrina Solid',
-                  color: Colors.black,
-                  fontStyle: FontStyle.italic,
-                ),),
-              )
-            ],
+                SizedBox(
+                  height: 55.0,
+                ),
+                FlatButton(
+                  child: Text(
+                    "COVID-19 +ve",
+                    style: TextStyle(
+                      fontSize: 20.0,
+                      fontWeight: FontWeight.w900,
+                      fontFamily: 'Lobster',
+                      color: Colors.indigo,
+                      fontStyle: FontStyle.italic,
+                    ),
+                  ),
+                  height: 40.0,
+                  minWidth: 280.0,
+                  color: Colors.pink,
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(11.0)),
+                  onPressed: () {
+                    Alert(
+                        context: context,
+                        title: "Covid Status Check",
+                        desc: "Are you sure about your Covid Status?",
+                        buttons: [
+                          DialogButton(
+                              child: Text("Yes"),
+                              onPressed: () {
+                                userStore
+                                    .collection("Users")
+                                    .document(name)
+                                    .updateData({"Covid_Status": true});
+                                Fluttertoast.showToast(
+                                    msg: "All your nearby users will get notified.Get well soon.Take care.",
+                                    gravity: ToastGravity.BOTTOM,
+                                    timeInSecForIos: 4,
+                                    backgroundColor: Colors.black54,
+                                    textColor: Colors.blueAccent);
+                                Navigator.pop(context);
+                              }),
+                          DialogButton(
+                              child: Text("No"),
+                              onPressed: () {
+                                Navigator.pop(context);
+                              })
+                        ]).show();
+                  },
+                ),
+                SizedBox(
+                  height: 90.0,
+                ),
+                Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 11.0),
+                  child: Text(last==null?"As of now, There are no nearby users":
+                  "Last time,You meet a person at ${last}",style: TextStyle(
+                    fontSize: 55.0,
+                    fontWeight: FontWeight.w800,
+                    fontFamily: 'Londrina Solid',
+                    color: Colors.black,
+                    fontStyle: FontStyle.italic,
+                  ),),
+                )
+              ],
+            ),
           ),
         ),
       ),
