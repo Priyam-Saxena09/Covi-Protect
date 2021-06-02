@@ -10,7 +10,7 @@ import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:covi_protect/Notify/notification_helper.dart';
 
-import 'About and Help/help.dart';
+import '../About and Help/help.dart';
 
 class Find extends StatefulWidget {
   @override

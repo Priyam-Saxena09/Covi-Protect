@@ -1,9 +1,9 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:covi_protect/signup.dart';
+import 'package:covi_protect/Authorisation/signup.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:rflutter_alert/rflutter_alert.dart';
-import 'package:covi_protect/covid_page.dart';
+import 'package:covi_protect/Covid/covid_page.dart';
 
 class LoginPage extends StatefulWidget {
   String name;

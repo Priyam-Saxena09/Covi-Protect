@@ -1,5 +1,5 @@
 import 'package:covi_protect/Welcome/welcome.dart';
-import 'package:covi_protect/signup.dart';
+import 'package:covi_protect/Authorisation/signup.dart';
 import 'package:flutter/material.dart';
 
 void main() {

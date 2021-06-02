@@ -1,4 +1,4 @@
-import 'package:covi_protect/login.dart';
+import 'package:covi_protect/Authorisation/login.dart';
 import 'package:flutter/material.dart';
 import 'package:rflutter_alert/rflutter_alert.dart';
 import 'package:firebase_auth/firebase_auth.dart';
