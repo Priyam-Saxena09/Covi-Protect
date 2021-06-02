@@ -1,16 +1,15 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:covi_protect/About%20and%20Help/about.dart';
+import 'package:covi_protect/Covid/update_location.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:rflutter_alert/rflutter_alert.dart';
-import 'package:vector_math/vector_math.dart' hide Colors;
-import 'dart:math';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
-import 'package:covi_protect/Notify/notification_helper.dart';
-
 import '../About and Help/help.dart';
+import 'covid_nearby.dart';
+import 'delete_users.dart';
 
 class Find extends StatefulWidget {
   @override
@@ -24,7 +23,7 @@ class _FindState extends State<Find> {
   final userStore = Firestore.instance;
   final FirebaseAuth _auth = FirebaseAuth.instance;
   String name;
-  DateTime last;
+  List<DateTime> last = [];
   var nearby_users = [];
   List<String> covid_users = [];
   Future<Position> getCor() async {
@@ -35,52 +34,8 @@ class _FindState extends State<Find> {
         print(position);
         lat = position.latitude;
         lon = position.longitude;
-        updateLocation();
+        Update.updateLocation(name, userStore, nearby_users, lat, lon, last);
       });
-    }
-  }
-
-  void updateLocation() async {
-    if (name != null) {
-      userStore
-          .collection("Users")
-          .document(name)
-          .updateData({"Location": GeoPoint(lat, lon)});
-      userStore
-          .collection("Users")
-          .getDocuments()
-          .then((QuerySnapshot snap) => snap.documents.forEach((element) {
-                //print(getDistance(element.data["Location"].latitude ,26.2187463, element.data["Location"].longitude, 81.8205575));
-                if (element.data["Name"] != name && element.data["LoggedIn"]) {
-                  double c = getDistance(lat, element.data["Location"].latitude,
-                      lon, element.data["Location"].longitude);
-                  bool flag = false;
-                  if (c < 2.0) {
-                    for (int i = 0; i < nearby_users.length; i++) {
-                      if (nearby_users[i].containsKey(element.data["Name"])) {
-                        var d = DateTime.now();
-                        DateTime t = Timestamp.fromDate(d).toDate();
-                        nearby_users[i][element.data["Name"]] = t;
-                        flag = true;
-                        last=t;
-                        break;
-                      }
-                    }
-                    if (!flag) {
-                      var d = DateTime.now();
-                      DateTime t = Timestamp.fromDate(d).toDate();
-                      var m = new Map();
-                      m[element.data["Name"]] = t;
-                      last=t;
-                      nearby_users.add(m);
-                    }
-                    userStore
-                        .collection("Nearby_Users")
-                        .document(name)
-                        .updateData({"nearby_users": nearby_users});
-                  }
-                }
-              }));
     }
   }
 
@@ -104,55 +59,7 @@ class _FindState extends State<Find> {
     }
   }
 
-  double getDistance(double lat1, double lat2, double lon1, double lon2) {
-    lat1 = radians(lat1);
-    lat2 = radians(lat2);
-    lon1 = radians(lon1);
-    lon2 = radians(lon2);
-    double dlon = radians(lon2 - lon1);
-    double dlat = radians(lat2 - lat1);
-    double a =
-        pow(sin(dlat / 2), 2) + pow(sin(dlon / 2), 2) * cos(lat1) * cos(lat2);
-    double c = 2 * asin(sqrt(a));
-    return c * 6371.0 * 1000.0;
-  }
-
-  void delete_users() {
-    DateTime d;
-    int dif;
-    List<Object> nearby;
-    if(name!=null)
-      {
-        userStore.collection("Nearby_Users").document(name).get().then((value) =>
-        {
-          for(int i = 0; i < value.data["nearby_users"].length; i++)
-            {
-              for(var n in value.data["nearby_users"][i].values)
-                {
-                  d = DateTime.now(),
-                  dif = d.difference(n.toDate()).inDays,
-                  if (dif >= 3)
-                    {
-                      nearby = [],
-                      for(int j=0;j<nearby_users.length;j++)
-                        {
-                          if(nearby_users[j].toString() !=  value.data["nearby_users"][i].toString())
-                            {
-                              nearby.add(nearby_users[j]),
-                            }
-                        },
-                      userStore
-                          .collection("Nearby_Users")
-                          .document(name)
-                          .updateData({"nearby_users": nearby})
-                    }
-                }
-            }
-
-        });
-      }
-    }
-    @override
+  @override
   void initState() {
     // TODO: implement initState
     super.initState();
@@ -175,40 +82,11 @@ class _FindState extends State<Find> {
         backgroundColor: Colors.black54,
         textColor: Colors.blueAccent);
   }
-  void get_Covid_nearby() {
-    if (name != null) {
-      userStore
-          .collection("Nearby_Users")
-          .document(name)
-          .get()
-          .then((value) => {
-                for (int i = 0; i < value.data["nearby_users"].length; i++)
-                  {
-                    for (var nm in value.data["nearby_users"][i].keys)
-                      {
-                        userStore
-                            .collection("Users")
-                            .document(nm)
-                            .get()
-                            .then((d) => {
-                                  if (d.data["Covid_Status"] && !covid_users.contains(nm))
-                                    {
-                                      covid_users.add(nm),
-                                      showOngoingNotification(notifications,
-                                          title: "Alert!",
-                                          body: "${nm} is Covid +ve")
-                                    }
-                                })
-                      }
-                  }
-              });
-    }
-  }
 
   @override
   Widget build(BuildContext context) {
-    delete_users();
-    get_Covid_nearby();
+    Del.delete_users(name, userStore, nearby_users);
+    Nearby.get_Covid_nearby(name, userStore, nearby_users, notifications);
     getCor();
     //print(name);
     //print(nearby_users);
@@ -230,33 +108,34 @@ class _FindState extends State<Find> {
           children: [
             Container(
                 padding: EdgeInsets.symmetric(horizontal: 14.0),
-              color: Colors.indigo,
-              width: double.infinity,
-              height: 125.0,
-              child: Center(
-                child: Text("Welcome ${name != null ? name : ""}",
-                  style: TextStyle(
-                    fontSize: 40.0,
-                    fontStyle: FontStyle.italic,
-                    fontFamily: 'Londrina Solid',
-                    color: Colors.redAccent,
+                color: Colors.indigo,
+                width: double.infinity,
+                height: 125.0,
+                child: Center(
+                  child: Text(
+                    "Welcome ${name != null ? name : ""}",
+                    style: TextStyle(
+                      fontSize: 40.0,
+                      fontStyle: FontStyle.italic,
+                      fontFamily: 'Londrina Solid',
+                      color: Colors.redAccent,
+                    ),
                   ),
-                ),
-              )
-            ),
+                )),
             SizedBox(
               height: 35.0,
             ),
             FlatButton(
               minWidth: 250.0,
               onPressed: () {
-                    Navigator.push(context, MaterialPageRoute(builder: (context){
-                       return About();
-                   }));
+                Navigator.push(context, MaterialPageRoute(builder: (context) {
+                  return About();
+                }));
               },
-              child: Text("About",style: TextStyle(
-                  color: Colors.white
-              ),),
+              child: Text(
+                "About",
+                style: TextStyle(color: Colors.white),
+              ),
               color: Colors.black,
             ),
             SizedBox(
@@ -265,13 +144,14 @@ class _FindState extends State<Find> {
             FlatButton(
               minWidth: 250.0,
               onPressed: () {
-                Navigator.push(context, MaterialPageRoute(builder: (context){
+                Navigator.push(context, MaterialPageRoute(builder: (context) {
                   return Help();
                 }));
               },
-              child: Text("Help",style: TextStyle(
-                color: Colors.white
-              ),),
+              child: Text(
+                "Help",
+                style: TextStyle(color: Colors.white),
+              ),
               color: Colors.black,
             ),
             SizedBox(
@@ -281,7 +161,7 @@ class _FindState extends State<Find> {
               minWidth: 250.0,
               onPressed: () {
                 var n = name;
-                name=null;
+                name = null;
                 userStore
                     .collection("Users")
                     .document(n)
@@ -290,9 +170,10 @@ class _FindState extends State<Find> {
                 Navigator.pop(context);
                 Navigator.pop(context);
               },
-              child: Text("Sign Out",style: TextStyle(
-                  color: Colors.white
-              ),),
+              child: Text(
+                "Sign Out",
+                style: TextStyle(color: Colors.white),
+              ),
               color: Colors.black,
             )
           ],
@@ -355,7 +236,8 @@ class _FindState extends State<Find> {
                                     .document(name)
                                     .updateData({"Covid_Status": true});
                                 Fluttertoast.showToast(
-                                    msg: "All your nearby users will get notified.Get well soon.Take care.",
+                                    msg:
+                                        "All your nearby users will get notified.Get well soon.Take care.",
                                     gravity: ToastGravity.BOTTOM,
                                     timeInSecForIos: 4,
                                     backgroundColor: Colors.black54,
@@ -375,14 +257,18 @@ class _FindState extends State<Find> {
                 ),
                 Padding(
                   padding: EdgeInsets.symmetric(horizontal: 11.0),
-                  child: Text(last==null?"As of now, There are no nearby users":
-                  "Last time,You meet a person at ${last}",style: TextStyle(
-                    fontSize: 55.0,
-                    fontWeight: FontWeight.w800,
-                    fontFamily: 'Londrina Solid',
-                    color: Colors.black,
-                    fontStyle: FontStyle.italic,
-                  ),),
+                  child: Text(
+                    last.isEmpty
+                        ? "As of now, There are no nearby users"
+                        : "Last time,You meet a person at ${last[0]}",
+                    style: TextStyle(
+                      fontSize: 55.0,
+                      fontWeight: FontWeight.w800,
+                      fontFamily: 'Londrina Solid',
+                      color: Colors.black,
+                      fontStyle: FontStyle.italic,
+                    ),
+                  ),
                 )
               ],
             ),
