@@ -38,7 +38,6 @@ class _FindState extends State<Find> {
       });
     }
   }
-
   void getUser() async {
     final user = await _auth.currentUser();
     if (user != null) {
@@ -86,7 +85,7 @@ class _FindState extends State<Find> {
   @override
   Widget build(BuildContext context) {
     Del.delete_users(name, userStore, nearby_users);
-    Nearby.get_Covid_nearby(name, userStore, nearby_users, notifications);
+    Nearby.get_Covid_nearby(name, userStore, covid_users, notifications);
     getCor();
     //print(name);
     //print(nearby_users);
@@ -160,13 +159,13 @@ class _FindState extends State<Find> {
             FlatButton(
               minWidth: 250.0,
               onPressed: () {
-                var n = name;
-                name = null;
+                String n = name;
+                name=null;
+                _auth.signOut();
                 userStore
                     .collection("Users")
                     .document(n)
                     .updateData({"LoggedIn": false});
-                _auth.signOut();
                 Navigator.pop(context);
                 Navigator.pop(context);
               },
